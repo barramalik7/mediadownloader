@@ -20,12 +20,26 @@ PLATFORM_DETECTORS = [
 ]
 
 
+from urllib.parse import urlparse
+
 def detect_platform(url: str) -> str | None:
-    """Detect the platform from a URL."""
-    for domain, platform in PLATFORM_DETECTORS:
-        if domain in url:
-            return platform
-    return None
+    """Detect the platform from a URL using strict hostname validation."""
+    try:
+        parsed = urlparse(url)
+        if not parsed.netloc:
+            return None
+            
+        hostname = parsed.netloc.lower()
+        if hostname.startswith("www."):
+            hostname = hostname[4:]
+            
+        for domain, platform in PLATFORM_DETECTORS:
+            if hostname == domain or hostname.endswith("." + domain):
+                return platform
+        return None
+    except Exception:
+        return None
+
 
 
 @router.post("/")
