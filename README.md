@@ -76,6 +76,21 @@ Detailed documentation is available in the `docs` folder:
 - [Technical Specs (TSD)](docs/TSD.md)
 - [Developer Log (DEVLOG)](docs/DEVLOG.md)
 
+## Authentication (Cookies)
+Some platforms (YouTube Premium, Age-gated content, Instagram, Twitter) require cookies to verify your identity and avoid rate limits.
+
+### How to get cookies:
+1.  Install the **"Get cookies.txt LOCALLY"** extension for [Chrome](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflccgomhhjfcah) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/get-cookies-txt-locally/).
+2.  **Login** to the platform (e.g., `www.youtube.com`) in your browser.
+3.  Click the extension icon and select **"Export"** (ensure "Netscape HTTP Cookie File" format is selected/default).
+4.  Save the file to the `cookies/` folder in this project root.
+5.  **Rename the file** exactly as follows:
+    - YouTube: `youtube.com_cookies.txt`
+    - Instagram: `instagram.com_cookies.txt`
+    - Twitter/X: `twitter.com_cookies.txt`
+    - TikTok: `tiktok.com_cookies.txt`
+    - Spotify: `spotify.com_cookies.txt`
+
 ## Troubleshooting
 - **Download Fails?** Check the terminal window running the app for detailed Python error logs.
 - **"Python not found"?** Ensure Python is installed and added to your system PATH.
