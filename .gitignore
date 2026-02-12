@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Project Specific
+downloads/
+cookies/
+*.log
+
+# Build / Agent Artifacts
+.gemini/
+.opencode/
+.agents/
+.agent/
