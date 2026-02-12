@@ -10,7 +10,8 @@ This document details the functional behavior of the Media Downloader, covering 
 - **Download Form (Card):**
   - **URL Input:** Text field for pasting the media link.
   - **Quality Selector:** Dropdown (Best, 1080p, 720p, 480p).
-  - **Format Selector:** Dropdown (MP4 / MP3).
+  - **Format Selector:** Dropdown (MP4 / MP3 / Image).
+  - **Launcher:** Windows users can use `run_app.bat` for automatic setup and launch.
   - **Download Button:** Shows spinner while loading.
 - **Status Area:** Success (green) or Error (red) messages below the form.
 
@@ -34,8 +35,8 @@ This document details the functional behavior of the Media Downloader, covering 
 - **Each service:**
   1. Resolves the output directory via `get_downloads_dir()`.
   2. Finds cookies via `find_cookie()`.
-  3. Builds the CLI command (`yt-dlp`, `gallery-dl`, or `spotdl`).
-  4. Executes via `run_download_command()` and returns a `DownloadResponse`.
+  3. Builds the CLI command (`yt-dlp` for video/audio, `gallery-dl` for images/galleries, or `spotdl` for music).
+  4. Executes via `run_download_command()` and returns a `DownloadResponse` or streams progress via SSE.
 
 ## 4. Workflows
 

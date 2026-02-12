@@ -3,7 +3,7 @@
 ## 1. Introduction
 **Product Name:** Media Downloader  
 **Version:** 2.0  
-**Purpose:** A local web application to download videos and audio from popular social media platforms without watermarks and in high quality.
+**Purpose:** A local web application to download videos, images, and audio from popular social media platforms without watermarks and in high quality.
 
 ## 2. Problem Statement
 Users need to archive or reuse media from social platforms. Existing tools are cluttered with ads, compress quality, or require CLI proficiency. This tool provides a clean UI backed by powerful Python engines.
@@ -12,7 +12,7 @@ Users need to archive or reuse media from social platforms. Existing tools are c
 - **Simplicity:** One-page interface for media downloads.
 - **Quality:** Highest available quality (up to 4K).
 - **Versatility:** Support YouTube, TikTok, Instagram, Twitter/X, Pinterest, Spotify.
-- **Flexibility:** Extract audio (MP3) from video sources.
+- **Flexibility:** Extract audio (MP3) from video sources or download images/galleries.
 - **Privacy:** Fully local execution — no data leaves the user's machine.
 - **Type Safety:** End-to-end type safety via OpenAPI-generated clients.
 
@@ -31,7 +31,8 @@ Users need to archive or reuse media from social platforms. Existing tools are c
 - Paste a URL from any supported platform.
 - Auto-detect the platform from the URL.
 - Choose video quality (Best, 1080p, 720p, 480p).
-- Choose output format (MP4 or MP3).
+- Choose output format (MP4, MP3, or original Image/Gallery).
+- **Automation:** One-click application launcher (`run_app.bat`) for Windows users.
 
 ### 6.2 System Feedback
 - Loading spinner during download.

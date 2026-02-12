@@ -9,7 +9,7 @@ The application uses a decoupled frontend-backend architecture with a typed API 
 | **Frontend** | React 18, Vite, TanStack Start (SSR), TanStack Query, Tailwind CSS |
 | **Backend** | FastAPI (Python), Pydantic, Uvicorn |
 | **API Interaction** | Native `fetch` with Vite proxy to FastAPI backend |
-| **Download Engines** | `yt-dlp` (YouTube, TikTok), `gallery-dl` (Instagram, Twitter, Pinterest), `spotdl` (Spotify) |
+| **Download Engines** | `yt-dlp` (Video/Audio), `gallery-dl` (Images/Galleries), `spotdl` (Spotify) |
 
 ## 2. Directory Structure
 ```
@@ -53,7 +53,7 @@ The application uses a decoupled frontend-backend architecture with a typed API 
 class DownloadRequest(BaseModel):
     url: str
     quality: Optional[str] = "1"        # "1"=Best, "2"=1080p, "3"=720p, "4"=480p
-    format: Optional[Literal["mp4", "mp3"]] = "mp4"
+    format: Optional[Literal["mp4", "mp3", "jpg", "png"]] = "mp4"
 ```
 
 ### 3.3 Response Model (`DownloadResponse`)

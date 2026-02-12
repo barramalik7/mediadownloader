@@ -12,6 +12,7 @@
     - [x] DRY refactor (shared `utils/helpers.py`).
     - [x] Cleanup legacy files (`web/`, `scripts/`, etc.).
     - [x] Update all documentation and `.gitignore`.
+    - [x] Document one-click launcher (`run_app.bat`) and image download features.
 
 ## Roadmap & Backlog
 - [ ] **Feature: Download History**

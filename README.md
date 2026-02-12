@@ -7,6 +7,7 @@ A premium, local-first web interface for downloading high-quality videos and aud
 ## Features
 - **Zero Watermarks:** Clean downloads from TikTok and Instagram.
 - **High Quality:** Support for up to 1080p+ video resolution.
+- **Image & Gallery Downloads:** High-quality image support for Pinterest and Instagram.
 - **Audio Extraction:** Convert any video to high-quality MP3.
 - **Multi-Platform:** Support for:
   - TikTok
@@ -42,6 +43,13 @@ A premium, local-first web interface for downloading high-quality videos and aud
     ```
 
 ### Running the App
+
+#### Option 1: Quick Start (Recommended for Windows)
+Simply double-click **`run_app.bat`** in the project root. This will automatically:
+1.  Start the Backend Server (Port 8000)
+2.  Start the Frontend Server (Port 5173)
+
+#### Option 2: Manual Start
 
 1.  **Start the Backend**
     ```bash
