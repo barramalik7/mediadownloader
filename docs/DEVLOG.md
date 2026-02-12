@@ -52,3 +52,8 @@
   - Wired `DownloaderForm` to use relative `/api` paths (via Vite proxy).
   - Removed `index.html`.
 - **Verification:** Verified dev server, browser rendering, and production build.
+
+## [2026-02-12] Bug Fixes: Error Handling & Streaming
+- **Backend (Critical):** Fixed generator delegation bug in all services (`tiktok.py`, `youtube.py`, etc.). Changed `return stream_download_command(cmd)` to `yield from ...` to correctly stream output.
+- **Frontend:** Fixed logic in `DownloaderForm.tsx` where backend errors were being swallowed by a `catch` block intended for JSON parsing. Now backend errors bubble up correctly to the UI.
+- **Result:** "Connection closed unexpectedly" errors are now replaced by actual error messages (e.g., "Download failed", "ffmpeg not found").

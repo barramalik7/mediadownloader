@@ -94,4 +94,6 @@ Some platforms (YouTube Premium, Age-gated content, Instagram, Twitter) require 
 ## Troubleshooting
 - **Download Fails?** Check the terminal window running the app for detailed Python error logs.
 - **"Python not found"?** Ensure Python is installed and added to your system PATH.
+- **"ffmpeg not found"?** Install FFmpeg and add it to your system PATH. This is required for MP3 conversion and some video formats.
 - **Cookies Error?** Some platforms (like YouTube premium content) require cookies. Place your `youtube.com_cookies.txt` in the `cookies/` directory.
+- **"Connection closed unexpectedly"?** This usually means the backend crashed or exited early. Check the backend terminal for error details.
