@@ -56,10 +56,10 @@ async def download_media(request: DownloadRequest):
     service_map = {
         "youtube": lambda: youtube.download_youtube(request.url, request.quality, request.format, cookies_dir),
         "tiktok": lambda: tiktok.download_tiktok(request.url, request.quality, request.format, cookies_dir),
-        "instagram": lambda: instagram.download_instagram(request.url, cookies_dir),
-        "twitter": lambda: twitter.download_twitter(request.url, cookies_dir),
+        "instagram": lambda: instagram.download_instagram(request.url, request.format, cookies_dir),
+        "twitter": lambda: twitter.download_twitter(request.url, request.format, cookies_dir),
         "spotify": lambda: spotify.download_spotify(request.url),
-        "pinterest": lambda: pinterest.download_pinterest(request.url, cookies_dir),
+        "pinterest": lambda: pinterest.download_pinterest(request.url, request.format, cookies_dir),
     }
 
     return StreamingResponse(service_map[platform](), media_type="text/event-stream")

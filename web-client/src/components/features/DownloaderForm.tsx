@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress"
 export function DownloaderForm() {
     const [url, setUrl] = useState("")
     const [quality, setQuality] = useState("1")
-    const [format, setFormat] = useState<"mp4" | "mp3">("mp4")
+    const [format, setFormat] = useState<"mp4" | "mp3" | "jpg" | "png">("mp4")
 
     // Download State
     const [isDownloading, setIsDownloading] = useState(false)
@@ -133,13 +133,15 @@ export function DownloaderForm() {
 
                         <div className="space-y-2">
                             <Label htmlFor="format">Format</Label>
-                            <Select value={format} onValueChange={(v: "mp4" | "mp3") => setFormat(v)} disabled={isDownloading}>
+                            <Select value={format} onValueChange={(v: "mp4" | "mp3" | "jpg" | "png") => setFormat(v)} disabled={isDownloading}>
                                 <SelectTrigger id="format">
                                     <SelectValue placeholder="Select format" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="mp4">Video (MP4)</SelectItem>
                                     <SelectItem value="mp3">Audio (MP3)</SelectItem>
+                                    <SelectItem value="jpg">Photo (JPG)</SelectItem>
+                                    <SelectItem value="png">Photo (PNG)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

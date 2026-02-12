@@ -4,7 +4,7 @@ from ..utils.helpers import get_downloads_dir, find_cookie, stream_download_comm
 import json
 from typing import Generator
 
-def download_twitter(url: str, cookies_dir: str = None, output_dir: str = None):
+def download_twitter(url: str, format_choice: str = "mp4", cookies_dir: str = None, output_dir: str = None):
     """Download media from Twitter/X using gallery-dl."""
     try:
         if not url:

@@ -4,7 +4,7 @@ from ..utils.helpers import get_downloads_dir, find_cookie, stream_download_comm
 import json
 from typing import Generator
 
-def download_instagram(url: str = None, cookies_dir: str = None, output_dir: str = None):
+def download_instagram(url: str = None, format_choice: str = "mp4", cookies_dir: str = None, output_dir: str = None):
     """Download media from Instagram using gallery-dl."""
     try:
         if "instagram.com" not in url:
