@@ -40,7 +40,7 @@ def download_youtube(url: str, quality: str = "1", format_choice: str = "mp4", c
         if cookie_path:
             cmd.extend(["--cookies", cookie_path])
 
-        return stream_download_command(cmd)
+        yield from stream_download_command(cmd)
 
     except Exception as e:
         error_data = {"status": "error", "message": f"Internal Server Error: {str(e)}"}

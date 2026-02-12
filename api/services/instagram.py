@@ -33,7 +33,7 @@ def download_instagram(url: str = None, format_choice: str = "mp4", cookies_dir:
         if cookie_path:
             cmd.extend(["--cookies", cookie_path])
 
-        return stream_download_command(cmd)
+        yield from stream_download_command(cmd)
 
     except Exception as e:
         error_data = {"status": "error", "message": f"Internal Server Error: {str(e)}"}

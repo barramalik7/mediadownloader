@@ -41,7 +41,7 @@ def download_twitter(url: str, format_choice: str = "mp4", cookies_dir: str = No
         if cookie_path:
             cmd.extend(["--cookies", cookie_path])
 
-        return stream_download_command(cmd)
+        yield from stream_download_command(cmd)
 
     except Exception as e:
         error_data = {"status": "error", "message": f"Internal Server Error: {str(e)}"}

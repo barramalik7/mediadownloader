@@ -50,6 +50,7 @@ export function DownloaderForm() {
             const reader = response.body.getReader()
             const decoder = new TextDecoder()
             let buffer = ""
+            let successReceived = false
 
             while (true) {
                 const { done, value } = await reader.read()
@@ -65,24 +66,31 @@ export function DownloaderForm() {
                 for (const line of lines) {
                     if (line.startsWith("data: ")) {
                         const jsonStr = line.slice(6)
+                        let data
                         try {
-                            const data = JSON.parse(jsonStr)
-
-                            if (data.status === "downloading") {
-                                if (data.progress) setProgress(data.progress)
-                                if (data.log) setStatusMessage(data.log) // Optional: show raw logs
-                            } else if (data.status === "completed") {
-                                setProgress(100)
-                                setIsSuccess(true)
-                                setStatusMessage(data.message)
-                            } else if (data.status === "error") {
-                                throw new Error(data.message)
-                            }
+                            data = JSON.parse(jsonStr)
                         } catch (e) {
                             console.error("Failed to parse SSE data", e)
+                            continue
+                        }
+
+                        if (data.status === "downloading") {
+                            if (data.progress) setProgress(data.progress)
+                            if (data.log) setStatusMessage(data.log) // Optional: show raw logs
+                        } else if (data.status === "completed") {
+                            setProgress(100)
+                            setIsSuccess(true)
+                            successReceived = true
+                            setStatusMessage(data.message)
+                        } else if (data.status === "error") {
+                            throw new Error(data.message)
                         }
                     }
                 }
+            }
+
+            if (!successReceived) {
+                throw new Error("Connection closed unexpectedly")
             }
 
         } catch (err) {

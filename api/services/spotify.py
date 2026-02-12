@@ -23,7 +23,7 @@ def download_spotify(url: str, output_dir: str = None):
 
         cmd = [sys.executable, "-m", "spotdl", url, "--output", output_dir]
 
-        return stream_download_command(cmd)
+        yield from stream_download_command(cmd)
 
     except Exception as e:
         error_data = {"status": "error", "message": f"Internal Server Error: {str(e)}"}
