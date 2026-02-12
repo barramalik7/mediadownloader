@@ -31,7 +31,7 @@ export function DownloaderForm() {
         setIsSuccess(false)
 
         try {
-            const response = await fetch("http://localhost:8000/api/download/", {
+            const response = await fetch("/api/download/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

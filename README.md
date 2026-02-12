@@ -15,10 +15,10 @@ A premium, local-first web interface for downloading high-quality videos and aud
   - Twitter / X
   - Pinterest
   - Spotify
-- **Frontend:** React, Vite, TanStack Router, TanStack Query, Tailwind CSS, Shadcn UI.
+- **Frontend:** React, Vite, TanStack Start (SSR), TanStack Query, Tailwind CSS, Shadcn UI.
 - **Backend:** FastAPI, Pydantic, Uvicorn.
 - **Supported Platforms:** YouTube, TikTok, Instagram, Twitter/X, Pinterest, Spotify.
-- **Type Safety:** End-to-end type safety with generated API clients.
+- **Type Safety:** End-to-end type safety.
 
 ## Getting Started
 
@@ -43,8 +43,18 @@ A premium, local-first web interface for downloading high-quality videos and aud
 
 ### Running the App
 
-Simply run the `run_app.bat` script in the root directory.
-This will launch both the backend (port 8000) and frontend (port 5173).
+1.  **Start the Backend**
+    ```bash
+    # From project root
+    python -m uvicorn api.main:app --reload --port 8000
+    ```
+
+2.  **Start the Frontend**
+    ```bash
+    # From web-client directory
+    cd web-client
+    npm run dev
+    ```
 
 - Frontend: [http://localhost:5173](http://localhost:5173)
 - API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -52,30 +62,12 @@ This will launch both the backend (port 8000) and frontend (port 5173).
 ## Project Structure
 
 - `api/`: FastAPI backend service.
-  - `services/`: Core logic for each platform downloader.
   - `routers/`: API endpoints.
-- `web-client/`: Vite + React frontend.
-  - `src/routes/`: File-based routing.
-  - `src/client/`: Generated API client.
+- `web-client/`: TanStack Start (SSR) frontend.
+  - `src/routes/`: File-based routing (`__root.tsx`, `index.tsx`).
+  - `src/app.tsx`: Server entry point.
+  - `src/entry-client.tsx`: Client hydration.
 - `downloads/`: Directory where media is saved.
-
-## Usage
-
-### Quick Start (Windows)
-Double-click the `run.bat` file in the project root. This will:
-1. Navigate to the web directory.
-2. Start the Next.js development server.
-3. Keep the window open for logs.
-
-Open your browser to `http://localhost:3000`.
-
-### Manual Start
-1. Open a terminal in the `web` directory.
-2. Run:
-   ```bash
-   npm run dev
-   ```
-3. Visit `http://localhost:3000`.
 
 ## Documentation
 Detailed documentation is available in the `docs` folder:

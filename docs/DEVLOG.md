@@ -37,3 +37,18 @@
 - Removed Node.js → Python process spawning overhead.
 - End-to-end type safety established via OpenAPI contract.
 - Added missing `__init__.py` files for all Python packages.
+
+## [2026-02-12] Migration to TanStack Start (SSR)
+- **Architecture:** Migrated from CSR (TanStack Router) to SSR (TanStack Start).
+- **Backend:** Updated `app.tsx` to use `createStartHandler` with `defaultStreamHandler`.
+- **Frontend:**
+  - Replaced `main.tsx` with `entry-client.tsx` (hydration) and `router.tsx` (router factory).
+  - Updated `__root.tsx` to handle document streaming (`HeadContent`, `Scripts`).
+  - Fixed `localStorage` SSR crash in `ThemeProvider`.
+  - Wrapped root in `QueryClientProvider` for SSR.
+  - Added `notFoundComponent` to root route.
+- **Cleanup:**
+  - Removed `src/client` (unused generated code).
+  - Wired `DownloaderForm` to use relative `/api` paths (via Vite proxy).
+  - Removed `index.html`.
+- **Verification:** Verified dev server, browser rendering, and production build.

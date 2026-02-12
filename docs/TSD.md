@@ -1,14 +1,14 @@
 # Technical Specification Document (TSD)
 
 ## 1. System Architecture
-The application uses a decoupled frontend-backend architecture with a typed API contract.
+The application uses a decoupled frontend-backend architecture with a typed API contract, now utilizing **TanStack Start** for Server-Side Rendering (SSR).
 
 ### 1.1 Stack
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 18, Vite, TanStack Router, TanStack Query, Tailwind CSS |
+| **Frontend** | React 18, Vite, TanStack Start (SSR), TanStack Query, Tailwind CSS |
 | **Backend** | FastAPI (Python), Pydantic, Uvicorn |
-| **API Contract** | OpenAPI 3.0 (auto-generated), `@hey-api/openapi-ts` (client generation) |
+| **API Interaction** | Native `fetch` with Vite proxy to FastAPI backend |
 | **Download Engines** | `yt-dlp` (YouTube, TikTok), `gallery-dl` (Instagram, Twitter, Pinterest), `spotdl` (Spotify) |
 
 ## 2. Directory Structure
@@ -20,25 +20,18 @@ The application uses a decoupled frontend-backend architecture with a typed API 
 │   ├── routers/
 │   │   └── download.py     # POST /api/download/ endpoint
 │   ├── services/           # Platform-specific download logic
-│   │   ├── youtube.py
-│   │   ├── tiktok.py
-│   │   ├── instagram.py
-│   │   ├── twitter.py
-│   │   ├── spotify.py
-│   │   └── pinterest.py
-│   ├── models/
-│   │   └── schemas.py      # Pydantic models (DownloadRequest, DownloadResponse)
 │   └── utils/
-│       └── helpers.py      # Shared logic (paths, cookies, subprocess)
-├── web-client/             # Vite + React Frontend
+│       └── helpers.py      # Shared logic
+├── web-client/             # Vite + React (TanStack Start) Frontend
 │   ├── src/
-│   │   ├── main.tsx        # App entry
-│   │   ├── routes/         # TanStack Router file-based routes
-│   │   ├── client/         # Auto-generated API client
-│   │   ├── components/     # UI components (Button, Card, Input, Select, Label)
-│   │   └── lib/            # Utilities (cn)
+│   │   ├── app.tsx         # Server entry point
+│   │   ├── entry-client.tsx # Client hydration entry
+│   │   ├── router.tsx      # Router factory
+│   │   ├── routes/         # File-based routes (__root.tsx, index.tsx)
+│   │   ├── components/     # UI components
+│   │   └── lib/            # Utilities
 │   ├── package.json
-│   └── vite.config.ts
+│   └── vite.config.ts      # Vite config with TanStack Start plugin & Proxy
 ├── cookies/                # Platform cookie files
 ├── downloads/              # Downloaded media output
 ├── docs/                   # Project documentation
@@ -53,6 +46,7 @@ The application uses a decoupled frontend-backend architecture with a typed API 
 |---|---|---|
 | `GET` | `/` | Health check |
 | `POST` | `/api/download/` | Download media from URL |
+| `GET` | `/api/download/` | (SSE) Stream progress updates |
 
 ### 3.2 Request Model (`DownloadRequest`)
 ```python
@@ -74,11 +68,12 @@ class DownloadResponse(BaseModel):
 
 ## 4. Data Flow
 ```
-User → DownloaderForm (React) → useMutation → downloadMediaApiDownloadPost()
+User → DownloaderForm (React) → native fetch() → Vite Proxy
   → POST /api/download/ (FastAPI)
     → detect_platform(url)
     → service.download_{platform}(url, ...)
-      → subprocess.run([yt-dlp|gallery-dl|spotdl, ...])
+      → Stream SSE events (progress)
+      → subprocess.run(...)
       → file saved to downloads/{platform}/
     → DownloadResponse → Frontend → UI update
 ```
@@ -90,8 +85,8 @@ User → DownloaderForm (React) → useMutation → downloadMediaApiDownloadPost
 - `yt-dlp[curl-cffi]`, `gallery-dl`, `spotdl`, `Pillow`
 
 ### Node.js (`web-client/package.json`)
-- `react`, `react-dom`, `@tanstack/react-router`, `@tanstack/react-query`
-- `@hey-api/openapi-ts`, `@hey-api/client-fetch`
+- `@tanstack/react-start`, `@tanstack/react-router`, `@tanstack/react-query`
+- `@tanstack/react-router-devtools`, `@tanstack/react-query-devtools`
 - `tailwindcss`, `lucide-react`, `class-variance-authority`
 
 ## 6. Security & Constraints

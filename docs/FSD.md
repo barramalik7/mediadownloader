@@ -16,9 +16,10 @@ This document details the functional behavior of the Media Downloader, covering 
 
 ## 3. System Components & Logic
 
-### 3.1 Frontend (React + Vite + TanStack)
-- **Component:** `DownloaderForm.tsx` manages form state via `useState`.
-- **Submission:** Uses TanStack Query's `useMutation` to call the generated API client function `downloadMediaApiDownloadPost()`.
+### 3.1 Frontend (React + Vite + TanStack Start)
+- **Framework:** TanStack Start (SSR) with file-based routing.
+- **Component:** `DownloaderForm.tsx` manages form state via `useState` and handles SSE streams.
+- **Submission:** Uses native `fetch` to call `/api/download/` (proxy to backend).
 - **Payload:**
   ```json
   { "url": "https://...", "quality": "1", "format": "mp4" }
@@ -29,6 +30,7 @@ This document details the functional behavior of the Media Downloader, covering 
 - **Endpoint:** `POST /api/download/`
 - **Platform Detection:** The router auto-detects the platform from the URL domain (e.g., `youtube.com` → YouTube service).
 - **Service Dispatch:** Routes to one of 6 service modules in `api/services/`.
+- **Streaming:** Progress updates are streamed back to the client via Server-Sent Events (SSE).
 - **Each service:**
   1. Resolves the output directory via `get_downloads_dir()`.
   2. Finds cookies via `find_cookie()`.
@@ -42,8 +44,9 @@ This document details the functional behavior of the Media Downloader, covering 
 2. Frontend sends POST to `/api/download/`.
 3. Backend detects platform → Dispatches to service.
 4. Service downloads file to `downloads/{platform}/`.
-5. Returns `{ success: true, message: "Download successful" }`.
-6. Frontend shows green success message.
+5. Progress updates are streamed via SSE to the frontend.
+6. Returns `{ success: true, message: "Download successful" }`.
+7. Frontend shows green success message and 100% progress.
 
 ### 4.2 Invalid URL
 1. Backend cannot match domain to any platform.
