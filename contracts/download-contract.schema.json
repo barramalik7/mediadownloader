@@ -1,0 +1,312 @@
+{
+  "downloadRuntimeErrorCode": [
+    "invalid_platform_input",
+    "missing_dependency",
+    "subprocess_failure",
+    "internal_error"
+  ],
+  "downloadStartErrorCode": [
+    "unsupported_platform"
+  ],
+  "downloadStreamEvent": {
+    "$defs": {
+      "DownloadCompletedEvent": {
+        "properties": {
+          "status": {
+            "const": "completed",
+            "title": "Status",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Progress"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ],
+        "title": "DownloadCompletedEvent",
+        "type": "object"
+      },
+      "DownloadDownloadingEvent": {
+        "properties": {
+          "status": {
+            "const": "downloading",
+            "title": "Status",
+            "type": "string"
+          },
+          "log": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Log"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Progress"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "DownloadDownloadingEvent",
+        "type": "object"
+      },
+      "DownloadErrorEvent": {
+        "properties": {
+          "status": {
+            "const": "error",
+            "title": "Status",
+            "type": "string"
+          },
+          "code": {
+            "enum": [
+              "invalid_platform_input",
+              "missing_dependency",
+              "subprocess_failure",
+              "internal_error"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "code",
+          "message"
+        ],
+        "title": "DownloadErrorEvent",
+        "type": "object"
+      }
+    },
+    "discriminator": {
+      "mapping": {
+        "completed": "#/$defs/DownloadCompletedEvent",
+        "downloading": "#/$defs/DownloadDownloadingEvent",
+        "error": "#/$defs/DownloadErrorEvent"
+      },
+      "propertyName": "status"
+    },
+    "oneOf": [
+      {
+        "$ref": "#/$defs/DownloadDownloadingEvent"
+      },
+      {
+        "$ref": "#/$defs/DownloadCompletedEvent"
+      },
+      {
+        "$ref": "#/$defs/DownloadErrorEvent"
+      }
+    ]
+  },
+  "downloadErrorEvent": {
+    "properties": {
+      "status": {
+        "const": "error",
+        "title": "Status",
+        "type": "string"
+      },
+      "code": {
+        "enum": [
+          "invalid_platform_input",
+          "missing_dependency",
+          "subprocess_failure",
+          "internal_error"
+        ],
+        "title": "Code",
+        "type": "string"
+      },
+      "message": {
+        "title": "Message",
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "code",
+      "message"
+    ],
+    "title": "DownloadErrorEvent",
+    "type": "object"
+  },
+  "errorDetailResponse": {
+    "properties": {
+      "code": {
+        "const": "unsupported_platform",
+        "title": "Code",
+        "type": "string"
+      },
+      "detail": {
+        "title": "Detail",
+        "type": "string"
+      }
+    },
+    "required": [
+      "code",
+      "detail"
+    ],
+    "title": "ErrorDetailResponse",
+    "type": "object"
+  },
+  "preflightCheck": {
+    "properties": {
+      "ok": {
+        "title": "Ok",
+        "type": "boolean"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Value"
+      },
+      "hint": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Hint"
+      },
+      "required_for": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Required For"
+      }
+    },
+    "required": [
+      "ok"
+    ],
+    "title": "PreflightCheck",
+    "type": "object"
+  },
+  "preflightResponse": {
+    "$defs": {
+      "PreflightCheck": {
+        "properties": {
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Value"
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Hint"
+          },
+          "required_for": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Required For"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "title": "PreflightCheck",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "status": {
+        "enum": [
+          "ok",
+          "degraded"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "status_message": {
+        "title": "Status Message",
+        "type": "string"
+      },
+      "checks": {
+        "additionalProperties": {
+          "$ref": "#/$defs/PreflightCheck"
+        },
+        "title": "Checks",
+        "type": "object"
+      }
+    },
+    "required": [
+      "status",
+      "status_message",
+      "checks"
+    ],
+    "title": "PreflightResponse",
+    "type": "object"
+  }
+}

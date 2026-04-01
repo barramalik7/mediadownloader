@@ -1,10 +1,16 @@
-from fastapi import APIRouter, HTTPException
+import logging
+from urllib.parse import urlparse
+
+from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-from ..models.schemas import DownloadRequest, DownloadResponse
-from ..services import youtube, tiktok, instagram, twitter, spotify, pinterest
+from fastapi.responses import JSONResponse
+from ..models.schemas import DownloadRequest, ErrorDetailResponse
+from ..services.adapters import DownloadCommandInput, stream_platform_download
+from ..services.registry import PLATFORM_ADAPTERS
 from ..utils.helpers import get_cookies_dir
 
 router = APIRouter()
+logger = logging.getLogger("mediadownloader.download")
 
 # Platform detection map
 PLATFORM_DETECTORS = [
@@ -18,10 +24,6 @@ PLATFORM_DETECTORS = [
     ("pin.it", "pinterest"),
     ("spotify.com", "spotify"),
 ]
-
-
-from urllib.parse import urlparse
-
 def detect_platform(url: str) -> str | None:
     """Detect the platform from a URL using strict hostname validation."""
     try:
@@ -42,24 +44,56 @@ def detect_platform(url: str) -> str | None:
 
 
 
-@router.post("/")
+STREAM_EXAMPLE = (
+    'data: {"status":"downloading","log":"[download] 45.2%","progress":45.2}\n\n'
+    'data: {"status":"completed","message":"Download successful","progress":100.0}\n\n'
+)
+
+
+@router.post(
+    "/",
+    response_class=StreamingResponse,
+    responses={
+        200: {
+            "description": (
+                "Server-Sent Events stream. Valid event sequence is zero or more "
+                "`downloading` events followed by exactly one terminal `completed` or `error` event."
+            ),
+            "content": {
+                "text/event-stream": {
+                    "example": STREAM_EXAMPLE,
+                }
+            },
+        },
+        400: {
+            "model": ErrorDetailResponse,
+            "description": "Request URL is valid but the platform is not supported.",
+        },
+        422: {
+            "description": "Request validation failed.",
+        },
+    },
+)
 async def download_media(request: DownloadRequest):
     """Download media from supported platforms."""
-    platform = detect_platform(request.url)
+    url = str(request.url)
+    platform = detect_platform(url)
 
     if not platform:
-        raise HTTPException(status_code=400, detail="Unsupported platform or invalid URL")
+        payload = ErrorDetailResponse(code="unsupported_platform", detail="Unsupported platform or invalid URL")
+        return JSONResponse(status_code=400, content=payload.model_dump())
 
     cookies_dir = get_cookies_dir()
+    adapter = PLATFORM_ADAPTERS[platform]
+    logger.info("download_request_received platform=%s format=%s quality=%s", platform, request.format, request.quality)
+    stream = stream_platform_download(
+        adapter,
+        DownloadCommandInput(
+            url=url,
+            quality=request.quality,
+            format_choice=request.format,
+            cookies_dir=cookies_dir,
+        ),
+    )
 
-    # Dispatch to appropriate service
-    service_map = {
-        "youtube": lambda: youtube.download_youtube(request.url, request.quality, request.format, cookies_dir),
-        "tiktok": lambda: tiktok.download_tiktok(request.url, request.quality, request.format, cookies_dir),
-        "instagram": lambda: instagram.download_instagram(request.url, request.format, cookies_dir),
-        "twitter": lambda: twitter.download_twitter(request.url, request.format, cookies_dir),
-        "spotify": lambda: spotify.download_spotify(request.url),
-        "pinterest": lambda: pinterest.download_pinterest(request.url, request.format, cookies_dir),
-    }
-
-    return StreamingResponse(service_map[platform](), media_type="text/event-stream")
+    return StreamingResponse(stream, media_type="text/event-stream")

@@ -8,11 +8,13 @@
 - [x] **v2.0: Architecture Refactoring**
     - [x] Migrate backend to FastAPI.
     - [x] Migrate frontend to Vite + TanStack.
-    - [x] Generate typed API client from OpenAPI.
+    - [x] Replace generated-client assumptions with typed fetch/SSE boundaries.
     - [x] DRY refactor (shared `utils/helpers.py`).
     - [x] Cleanup legacy files (`web/`, `scripts/`, etc.).
     - [x] Update all documentation and `.gitignore`.
     - [x] Document one-click launcher (`run_app.bat`) and image download features.
+    - [x] Add health and preflight diagnostics for local runtime readiness.
+    - [x] Add automated backend and frontend test coverage for current contracts.
 
 ## Roadmap & Backlog
 - [ ] **Feature: Download History**
@@ -21,10 +23,8 @@
 - [ ] **Feature: Batch Downloading**
     - [ ] Support playlist URLs and comma-separated URLs.
 - [ ] **UI Improvements**
-    - [ ] Real-time progress bar (WebSocket or SSE).
-    - [ ] Dark/Light mode toggle.
     - [ ] Enhanced responsive design.
 - [ ] **Code Quality**
     - [ ] Add comprehensive error handling for missing Python deps.
-    - [ ] Add unit tests for backend services.
-    - [ ] Add E2E tests for frontend flows.
+    - [ ] Add browser-level E2E tests for frontend flows.
+    - [ ] Extend adapter coverage to more platform-specific command variants.

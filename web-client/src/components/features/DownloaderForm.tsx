@@ -1,105 +1,26 @@
-import { useState } from "react"
-import { Loader2, Download, AlertCircle, CheckCircle2 } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
+import { Loader2, Download, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { useDownloadFlow } from '@/features/download/use-download-flow'
+import type { DownloadFormat } from '@/features/download/types'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
+import { Progress } from '@/components/ui/progress'
 
 export function DownloaderForm() {
-    const [url, setUrl] = useState("")
-    const [quality, setQuality] = useState("1")
-    const [format, setFormat] = useState<"mp4" | "mp3" | "jpg" | "png">("mp4")
-
-    // Download State
-    const [isDownloading, setIsDownloading] = useState(false)
-    const [progress, setProgress] = useState(0)
-    const [statusMessage, setStatusMessage] = useState("")
-    const [error, setError] = useState<string | null>(null)
-    const [isSuccess, setIsSuccess] = useState(false)
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!url) return
-
-        setIsDownloading(true)
-        setProgress(0)
-        setStatusMessage("Starting download...")
-        setError(null)
-        setIsSuccess(false)
-
-        try {
-            const response = await fetch("/api/download/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ url, quality, format }),
-            })
-
-            if (!response.ok) {
-                // If API returns 4xx/5xx immediately (not a stream)
-                const errorData = await response.json()
-                throw new Error(errorData.detail || "Failed to start download")
-            }
-
-            if (!response.body) throw new Error("No response body")
-
-            const reader = response.body.getReader()
-            const decoder = new TextDecoder()
-            let buffer = ""
-            let successReceived = false
-
-            while (true) {
-                const { done, value } = await reader.read()
-                if (done) break
-
-                const chunk = decoder.decode(value, { stream: true })
-                buffer += chunk
-
-                // Process incomplete chunks
-                const lines = buffer.split("\n\n")
-                buffer = lines.pop() || "" // Keep the last incomplete line in buffer
-
-                for (const line of lines) {
-                    if (line.startsWith("data: ")) {
-                        const jsonStr = line.slice(6)
-                        let data
-                        try {
-                            data = JSON.parse(jsonStr)
-                        } catch (e) {
-                            console.error("Failed to parse SSE data", e)
-                            continue
-                        }
-
-                        if (data.status === "downloading") {
-                            if (data.progress) setProgress(data.progress)
-                            if (data.log) setStatusMessage(data.log) // Optional: show raw logs
-                        } else if (data.status === "completed") {
-                            setProgress(100)
-                            setIsSuccess(true)
-                            successReceived = true
-                            setStatusMessage(data.message)
-                        } else if (data.status === "error") {
-                            throw new Error(data.message)
-                        }
-                    }
-                }
-            }
-
-            if (!successReceived) {
-                throw new Error("Connection closed unexpectedly")
-            }
-
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An unknown error occurred")
-            setStatusMessage("Download failed")
-        } finally {
-            setIsDownloading(false)
-        }
-    }
+    const {
+        values,
+        isDownloading,
+        progress,
+        statusMessage,
+        error,
+        isSuccess,
+        setUrl,
+        setQuality,
+        setFormat,
+        handleSubmit,
+    } = useDownloadFlow()
 
     return (
         <Card className="w-full max-w-xl mx-auto border-border bg-card/50 backdrop-blur-sm">
@@ -116,7 +37,7 @@ export function DownloaderForm() {
                         <Input
                             id="url"
                             placeholder="Paste your link here..."
-                            value={url}
+                            value={values.url}
                             onChange={(e) => setUrl(e.target.value)}
                             disabled={isDownloading}
                             required
@@ -126,7 +47,7 @@ export function DownloaderForm() {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="quality">Quality</Label>
-                            <Select value={quality} onValueChange={setQuality} disabled={isDownloading}>
+                            <Select value={values.quality} onValueChange={setQuality} disabled={isDownloading}>
                                 <SelectTrigger id="quality">
                                     <SelectValue placeholder="Select quality" />
                                 </SelectTrigger>
@@ -141,7 +62,11 @@ export function DownloaderForm() {
 
                         <div className="space-y-2">
                             <Label htmlFor="format">Format</Label>
-                            <Select value={format} onValueChange={(v: "mp4" | "mp3" | "jpg" | "png") => setFormat(v)} disabled={isDownloading}>
+                            <Select
+                                value={values.format}
+                                onValueChange={(value) => setFormat(value as DownloadFormat)}
+                                disabled={isDownloading}
+                            >
                                 <SelectTrigger id="format">
                                     <SelectValue placeholder="Select format" />
                                 </SelectTrigger>
@@ -181,7 +106,7 @@ export function DownloaderForm() {
 
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full" disabled={isDownloading || !url}>
+                    <Button type="submit" className="w-full" disabled={isDownloading || !values.url}>
                         {isDownloading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

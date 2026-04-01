@@ -2,7 +2,7 @@
 TITLE Media Downloader Launcher
 
 echo Starting Backend Server...
-start "Media Downloader Backend" cmd /k "call .venv\Scripts\activate.bat 2>nul & python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
+start "Media Downloader Backend" cmd /k "call .venv\Scripts\activate.bat 2>nul & python -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload"
 
 echo Starting Frontend Server...
 start "Media Downloader Frontend" cmd /k "cd web-client & npm run dev"

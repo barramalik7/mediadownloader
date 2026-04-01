@@ -27,6 +27,9 @@ Thumbs.db
 downloads/
 cookies/
 *.log
+scripts/smoke-urls.json
+pytest-cache-files-*/
+youtube-adapter-*/
 
 # Build / Agent Artifacts
 .gemini/

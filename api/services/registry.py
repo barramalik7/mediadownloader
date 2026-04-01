@@ -1,0 +1,18 @@
+from .adapters import (
+    INSTAGRAM_ADAPTER,
+    PINTEREST_ADAPTER,
+    SPOTIFY_ADAPTER,
+    TIKTOK_ADAPTER,
+    TWITTER_ADAPTER,
+    YOUTUBE_ADAPTER,
+)
+
+
+PLATFORM_ADAPTERS = {
+    "youtube": YOUTUBE_ADAPTER,
+    "tiktok": TIKTOK_ADAPTER,
+    "instagram": INSTAGRAM_ADAPTER,
+    "twitter": TWITTER_ADAPTER,
+    "spotify": SPOTIFY_ADAPTER,
+    "pinterest": PINTEREST_ADAPTER,
+}
